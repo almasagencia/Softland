@@ -1,0 +1,287 @@
+<meta charset="utf-8">
+<title>Huecos WhatsApp GA4</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --page: #f9f9f7;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6;
+    --gap: #d03b3b;
+    --gap-wash: rgba(208,59,59,0.07);
+    --gap-wash-strong: rgba(208,59,59,0.13);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19;
+      --page: #0d0d0d;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --grid: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5;
+      --gap: #d03b3b;
+      --gap-wash: rgba(208,59,59,0.13);
+      --gap-wash-strong: rgba(208,59,59,0.22);
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --page: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5;
+    --gap: #d03b3b;
+    --gap-wash: rgba(208,59,59,0.13);
+    --gap-wash-strong: rgba(208,59,59,0.22);
+  }
+
+  body { margin: 0; background: var(--page, #f9f9f7); }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    padding: 28px 20px 40px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .viz-root h1 { font-size: 21px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .viz-root .sub { font-size: 14px; color: var(--text-secondary); margin: 0 0 22px; line-height: 1.5; }
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 18px 12px;
+    margin-bottom: 18px;
+  }
+  .key { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px; }
+  .key span { display: inline-flex; align-items: center; gap: 7px; }
+  .key i { display: inline-block; }
+  .k-line { width: 18px; height: 2px; background: var(--series-1); border-radius: 1px; }
+  .k-band { width: 14px; height: 12px; background: var(--gap-wash-strong); border-top: 2px solid var(--gap); }
+  .chart-scroll { overflow-x: auto; }
+  svg { display: block; }
+  .tick { font-size: 11px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .band-label { font-size: 10.5px; fill: var(--text-secondary); font-weight: 600; }
+  .pt-label { font-size: 11px; fill: var(--text-secondary); font-weight: 600; }
+  .tooltip {
+    position: absolute; pointer-events: none; opacity: 0;
+    background: var(--surface-1); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: 7px;
+    padding: 7px 10px; font-size: 12.5px; line-height: 1.45;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.14); white-space: nowrap;
+    transition: opacity .09s linear; z-index: 5;
+  }
+  .tooltip b { font-weight: 600; }
+  .tooltip .zero { color: var(--gap); font-weight: 600; }
+  .wrap { position: relative; }
+  details { margin-top: 4px; }
+  summary { cursor: pointer; font-size: 13px; color: var(--text-secondary); padding: 6px 0; }
+  table { border-collapse: collapse; font-size: 12.5px; margin-top: 10px; }
+  th, td { text-align: left; padding: 5px 14px 5px 0; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  td { color: var(--text-primary); }
+  th { color: var(--text-secondary); font-weight: 600; }
+  .note { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .gaps-tbl td:first-child { font-weight: 600; }
+</style>
+
+<div class="viz-root">
+  <h1>Eventos WHATSAPP_* en GA4 &mdash; huecos sin registro</h1>
+  <p class="sub">
+    Propiedad www.softland.com.co (G-14J0K9990K). 1 jul &ndash; 25 ago 2026 &middot; 59 eventos en 56 días
+    (~1,05/día). Las bandas rojas marcan las rachas de <b>4 días o más</b> sin ningún evento.
+    El 26 de ago se excluye: día en curso, dato incompleto.
+  </p>
+
+  <div class="card">
+    <div class="key">
+      <span><i class="k-line"></i> Eventos por día</span>
+      <span><i class="k-band"></i> Racha de 4+ días en cero</span>
+    </div>
+    <div class="chart-scroll">
+      <div class="wrap">
+        <svg id="chart" width="1020" height="330" role="img"
+             aria-label="Línea de eventos WhatsApp por día entre el 1 de julio y el 25 de agosto de 2026, con cinco rachas de cuatro o más días sin eventos resaltadas."></svg>
+        <div class="tooltip" id="tip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="gaps-tbl">
+      <thead><tr><th>Racha en cero</th><th>Días</th><th>Días hábiles</th></tr></thead>
+      <tbody>
+        <tr><td>11 &ndash; 14 jul</td><td>4</td><td>2</td></tr>
+        <tr><td>17 &ndash; 20 jul</td><td>4</td><td>2</td></tr>
+        <tr><td>25 &ndash; 28 jul</td><td>4</td><td>2</td></tr>
+        <tr><td>13 &ndash; 16 ago</td><td>4</td><td>2</td></tr>
+        <tr><td>21 &ndash; 25 ago</td><td>5</td><td>3</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:14px">
+      El hueco actual es el más largo del periodo: 3 días hábiles frente a 2 de los cuatro anteriores.
+      Está en el extremo del rango histórico, no en el centro.
+    </p>
+  </div>
+
+  <details>
+    <summary>Ver datos (56 días)</summary>
+    <table id="dataTable">
+      <thead><tr><th>Fecha</th><th>Eventos</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </details>
+</div>
+
+<script>
+(function () {
+  // Días con eventos (export GA4). Los ausentes = 0.
+  var raw = {
+    "2026-07-01":1,"2026-07-03":3,"2026-07-06":1,"2026-07-07":2,"2026-07-08":3,
+    "2026-07-09":3,"2026-07-10":5,"2026-07-15":1,"2026-07-16":5,"2026-07-21":1,
+    "2026-07-22":2,"2026-07-24":3,"2026-07-29":3,"2026-07-30":1,"2026-07-31":2,
+    "2026-08-03":2,"2026-08-04":1,"2026-08-05":1,"2026-08-06":1,"2026-08-08":1,
+    "2026-08-11":7,"2026-08-12":1,"2026-08-17":3,"2026-08-18":1,"2026-08-19":3,
+    "2026-08-20":2
+  };
+
+  var MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  var DOW = ["dom","lun","mar","mié","jue","vie","sáb"];
+
+  // Serie completa 1 jul – 25 ago
+  var data = [];
+  var d = new Date(Date.UTC(2026, 6, 1));
+  var end = Date.UTC(2026, 7, 25);
+  while (d.getTime() <= end) {
+    var iso = d.toISOString().slice(0, 10);
+    data.push({ iso: iso, date: new Date(d.getTime()), v: raw[iso] || 0 });
+    d = new Date(d.getTime() + 86400000);
+  }
+
+  // Rachas de 4+ ceros
+  var bands = [], run = null;
+  data.forEach(function (p, i) {
+    if (p.v === 0) { if (!run) run = { s: i, e: i }; else run.e = i; }
+    if (p.v !== 0 || i === data.length - 1) {
+      if (run && (run.e - run.s + 1) >= 4) bands.push({ s: run.s, e: run.e });
+      if (p.v !== 0) run = null;
+    }
+  });
+
+  var W = 1020, H = 330;
+  var M = { t: 26, r: 26, b: 46, l: 40 };
+  var iw = W - M.l - M.r, ih = H - M.t - M.b;
+  var maxV = 7, yTicks = [0, 2, 4, 6];
+
+  var x = function (i) { return M.l + (iw * i) / (data.length - 1); };
+  var y = function (v) { return M.t + ih - (ih * v) / maxV; };
+  var step = iw / (data.length - 1);
+
+  var NS = "http://www.w3.org/2000/svg";
+  function el(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+  var svg = document.getElementById("chart");
+  function add(e) { svg.appendChild(e); return e; }
+
+  function fmt(dt) { return dt.getUTCDate() + " " + MES[dt.getUTCMonth()]; }
+
+  // Bandas de hueco (detrás de todo)
+  bands.forEach(function (b) {
+    var x0 = x(b.s) - step / 2, x1 = x(b.e) + step / 2;
+    add(el("rect", { x: x0, y: M.t, width: Math.max(x1 - x0, 2), height: ih,
+                     fill: "var(--gap-wash)" }));
+    add(el("line", { x1: x0, y1: M.t, x2: x1, y2: M.t,
+                     stroke: "var(--gap)", "stroke-width": 2 }));
+    var n = b.e - b.s + 1;
+    var lbl = add(el("text", { x: (x0 + x1) / 2, y: M.t - 10,
+                               "text-anchor": "middle", class: "band-label" }));
+    lbl.textContent = n + " días";
+  });
+
+  // Gridlines + eje Y
+  yTicks.forEach(function (t) {
+    add(el("line", { x1: M.l, y1: y(t), x2: M.l + iw, y2: y(t),
+                     stroke: t === 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }));
+    var tx = add(el("text", { x: M.l - 9, y: y(t) + 4, "text-anchor": "end", class: "tick" }));
+    tx.textContent = t;
+  });
+
+  // Ticks X: cada lunes
+  data.forEach(function (p, i) {
+    if (p.date.getUTCDay() !== 1) return;
+    var tx = add(el("text", { x: x(i), y: M.t + ih + 20, "text-anchor": "middle", class: "tick" }));
+    tx.textContent = fmt(p.date);
+  });
+
+  // Línea
+  var path = data.map(function (p, i) { return (i ? "L" : "M") + x(i) + " " + y(p.v); }).join(" ");
+  add(el("path", { d: path, fill: "none", stroke: "var(--series-1)", "stroke-width": 2,
+                   "stroke-linejoin": "round", "stroke-linecap": "round" }));
+
+  // Marcadores solo en días con eventos (anillo de superficie 2px)
+  data.forEach(function (p, i) {
+    if (!p.v) return;
+    add(el("circle", { cx: x(i), cy: y(p.v), r: 4,
+                       fill: "var(--series-1)", stroke: "var(--surface-1)", "stroke-width": 2 }));
+  });
+
+  // Etiqueta selectiva: el máximo
+  var mi = 0;
+  data.forEach(function (p, i) { if (p.v > data[mi].v) mi = i; });
+  var ml = add(el("text", { x: x(mi), y: y(data[mi].v) - 12, "text-anchor": "middle", class: "pt-label" }));
+  ml.textContent = data[mi].v;
+
+  // Hover: crosshair + tooltip
+  var cross = add(el("line", { x1: 0, y1: M.t, x2: 0, y2: M.t + ih,
+                               stroke: "var(--baseline)", "stroke-width": 1, opacity: 0 }));
+  var hoverDot = add(el("circle", { r: 5, fill: "var(--series-1)",
+                                    stroke: "var(--surface-1)", "stroke-width": 2, opacity: 0 }));
+  var tip = document.getElementById("tip");
+  var hit = add(el("rect", { x: M.l, y: M.t, width: iw, height: ih, fill: "transparent" }));
+
+  function move(ev) {
+    var r = svg.getBoundingClientRect();
+    var px = (ev.clientX - r.left) * (W / r.width);
+    var i = Math.round(((px - M.l) / iw) * (data.length - 1));
+    i = Math.max(0, Math.min(data.length - 1, i));
+    var p = data[i];
+    cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("opacity", 1);
+    hoverDot.setAttribute("cx", x(i)); hoverDot.setAttribute("cy", y(p.v)); hoverDot.setAttribute("opacity", 1);
+    var inBand = bands.some(function (b) { return i >= b.s && i <= b.e; });
+    tip.innerHTML = "<b>" + DOW[p.date.getUTCDay()] + " " + fmt(p.date) + "</b><br>" +
+      (p.v === 0 ? "<span class='zero'>Sin eventos</span>" + (inBand ? " · en racha" : "")
+                 : p.v + (p.v === 1 ? " evento" : " eventos"));
+    var wr = svg.parentNode.getBoundingClientRect();
+    var lx = (x(i) / W) * r.width;
+    tip.style.opacity = 1;
+    tip.style.left = Math.min(Math.max(lx - tip.offsetWidth / 2, 0), wr.width - tip.offsetWidth) + "px";
+    tip.style.top = Math.max((y(p.v) / H) * r.height - tip.offsetHeight - 12, 0) + "px";
+  }
+  function leave() { tip.style.opacity = 0; cross.setAttribute("opacity", 0); hoverDot.setAttribute("opacity", 0); }
+  hit.addEventListener("mousemove", move);
+  hit.addEventListener("mouseleave", leave);
+  hit.addEventListener("touchmove", function (e) { if (e.touches[0]) move(e.touches[0]); });
+  hit.addEventListener("touchend", leave);
+
+  // Tabla
+  var tb = document.querySelector("#dataTable tbody");
+  data.forEach(function (p) {
+    var tr = document.createElement("tr");
+    var a = document.createElement("td"); a.textContent = DOW[p.date.getUTCDay()] + " " + fmt(p.date);
+    var b = document.createElement("td"); b.textContent = p.v;
+    tr.appendChild(a); tr.appendChild(b); tb.appendChild(tr);
+  });
+})();
+</script>
